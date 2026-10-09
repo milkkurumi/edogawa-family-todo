@@ -145,7 +145,7 @@ export const TASKS: TaskDef[] = [
   },
   {
     id: 'preg-wbs',
-    title: 'マタニティ教室「Welcome Baby School」に夫婦で参加',
+    title: '区主催の「ハローベビー教室」や産院の母親学級に参加',
     phase: 'pregnancy', priority: 'recommend', role: 'together', anchor: 'due',
     startOffset: wk(20), endOffset: wk(35),
     firstChildOnly: true,
