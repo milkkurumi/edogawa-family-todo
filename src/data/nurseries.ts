@@ -8,12 +8,15 @@ export interface Nursery {
   url?: string
   lat?: number
   lng?: number
+  acceptsZero?: boolean
+  extendedCare?: boolean
+  capacity?: number
 }
 
 export const NURSERIES: Nursery[] = [
-  { id: 'n0', name: '平井保育園', type: '認可保育施設' as any },
-  { id: 'n1', name: '南平井保育園', type: '認可保育施設' as any },
-  { id: 'n2', name: '西平井保育園', type: '認可保育施設' as any },
+  { id: 'n0', name: '平井保育園', type: '区立保育園', acceptsZero: false, extendedCare: false, capacity: 104 },
+  { id: 'n1', name: '南平井保育園', type: '区立保育園', acceptsZero: true, extendedCare: true, capacity: 112 },
+  { id: 'n2', name: '西平井保育園', type: '区立保育園', acceptsZero: true, extendedCare: true, capacity: 97 },
   { id: 'n3', name: '平井第二保育園', type: '認可保育施設' as any },
   { id: 'n4', name: '小松川第二保育園', type: '認可保育施設' as any },
   { id: 'n5', name: '小松川第三保育園', type: '認可保育施設' as any },

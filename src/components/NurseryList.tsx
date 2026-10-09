@@ -14,6 +14,10 @@ const LABEL: Record<string, string> = { all: 'すべて', fav: 'お気に入り'
 export function NurseryList({ settings, onUpdateSettings }: NurseryListProps) {
   const [filter, setFilter] = useState<(typeof TYPES)[number]>('all')
   const [searchText, setSearchText] = useState('')
+  const [needZero, setNeedZero] = useState(false)
+  const [needExtended, setNeedExtended] = useState(false)
+  const [sortBy, setSortBy] = useState<'default' | 'capacity'>('default')
+
   const favorites = settings.nurseryFavorites || []
   const memos = settings.nurseryMemos || {}
   const custom = settings.customNurseries || []
@@ -37,18 +41,26 @@ export function NurseryList({ settings, onUpdateSettings }: NurseryListProps) {
     onUpdateSettings({
       ...settings,
       customNurseries: [...custom, newNursery],
-      nurseryFavorites: [...favorites, newNursery.id] // Auto-favorite
+      nurseryFavorites: [...favorites, newNursery.id]
     })
     setSearchText('')
     setFilter('fav')
   }
 
-  const allNurseries = [...NURSERIES, ...custom]
+  let allNurseries = [...NURSERIES, ...custom]
 
-  const list = allNurseries.filter((n) => {
+  // Filtering
+  let list = allNurseries.filter((n) => {
     if (searchText && !n.name.includes(searchText)) return false
-    return filter === 'all' ? true : filter === 'fav' ? favorites.includes(n.id) : n.type === filter
+    if (needZero && n.acceptsZero === false) return false
+    if (needExtended && n.extendedCare === false) return false
+    return filter === 'all' ? true : filter === 'fav' ? favorites.includes(n.id) : n.type === filter || n.type === '区立保育園'
   })
+
+  // Sorting
+  if (sortBy === 'capacity') {
+    list.sort((a, b) => (b.capacity || 0) - (a.capacity || 0))
+  }
 
   const isExactMatch = allNurseries.some(n => n.name === searchText.trim())
 
@@ -60,16 +72,21 @@ export function NurseryList({ settings, onUpdateSettings }: NurseryListProps) {
     color: on ? '#fff' : '#333',
     whiteSpace: 'nowrap' as const,
   })
-
   
+  const toggleBtn = (on: boolean) => ({
+    padding: '0.4rem 0.8rem', borderRadius: '4px', border: '1px solid #2b7055',
+    background: on ? '#2b7055' : '#fff', color: on ? '#fff' : '#2b7055', fontSize: '0.9rem', cursor: 'pointer'
+  })
+
   const renderComparisonTable = () => (
     <div style={{ overflowX: 'auto', marginTop: '1rem', background: '#fff', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>
         <thead>
           <tr style={{ background: '#e0f2e9', color: '#2b7055', textAlign: 'left' }}>
             <th style={{ padding: '0.8rem', borderBottom: '2px solid #2b7055' }}>保育園名</th>
+            <th style={{ padding: '0.8rem', borderBottom: '2px solid #2b7055' }}>データ</th>
             <th style={{ padding: '0.8rem', borderBottom: '2px solid #2b7055', width: '60px', textAlign: 'center' }}>見学</th>
-            <th style={{ padding: '0.8rem', borderBottom: '2px solid #2b7055' }}>比較メモ（延長保育・距離など）</th>
+            <th style={{ padding: '0.8rem', borderBottom: '2px solid #2b7055' }}>比較メモ</th>
             <th style={{ padding: '0.8rem', borderBottom: '2px solid #2b7055', width: '80px', textAlign: 'center' }}>操作</th>
           </tr>
         </thead>
@@ -79,6 +96,11 @@ export function NurseryList({ settings, onUpdateSettings }: NurseryListProps) {
               <td style={{ padding: '0.8rem', fontWeight: 'bold' }}>
                 <a href={searchUrl(n)} target="_blank" rel="noreferrer" style={{ color: '#2b7055', textDecoration: 'none' }}>{n.name}</a>
               </td>
+              <td style={{ padding: '0.8rem', fontSize: '0.8rem', color: '#666' }}>
+                {n.capacity ? `定員: ${n.capacity}名` : ''}<br/>
+                {n.acceptsZero !== undefined ? (n.acceptsZero ? '✅ 0歳可' : '❌ 0歳不可') : ''}<br/>
+                {n.extendedCare !== undefined ? (n.extendedCare ? '✅ 延長有' : '❌ 延長無') : ''}
+              </td>
               <td style={{ padding: '0.8rem', textAlign: 'center' }}>
                 <input type="checkbox" style={{ transform: 'scale(1.5)', cursor: 'pointer' }} />
               </td>
@@ -87,7 +109,7 @@ export function NurseryList({ settings, onUpdateSettings }: NurseryListProps) {
                   value={memos[n.id] || ''}
                   onChange={(e) => updateMemo(n.id, e.target.value)}
                   placeholder="延長保育の時間、おむつサブスク、家からの距離など..."
-                  style={{ width: '100%', padding: '0.4rem', border: '1px solid #ddd', borderRadius: '4px', resize: 'vertical', minHeight: '40px' }}
+                  style={{ width: '100%', padding: '0.4rem', border: '1px solid #ddd', borderRadius: '4px', resize: 'vertical', minHeight: '60px' }}
                 />
               </td>
               <td style={{ padding: '0.8rem', textAlign: 'center' }}>
@@ -104,20 +126,32 @@ export function NurseryList({ settings, onUpdateSettings }: NurseryListProps) {
 
   return (
     <div style={{ paddingBottom: '80px' }}>
-      <h2>江戸川区の保育施設</h2>
-      <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '1rem' }}>
-        気になる園に「★」をつけると、メモで夫婦の感想を記録できます。<br/>
-        ※一覧にない園は検索ボックスから手動追加できます。
-      </p>
+      <h2>江戸川区の保育施設データベース</h2>
+      
+      <div style={{ background: '#f5f8f6', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
+        <div style={{ marginBottom: '0.8rem' }}>
+          <input 
+            type="text" 
+            value={searchText}
+            onChange={e => setSearchText(e.target.value)}
+            placeholder="保育園名で検索..."
+            style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #ccc', fontSize: '1rem', boxSizing: 'border-box' }}
+          />
+        </div>
+        
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
+          <span style={{ fontSize: '0.9rem', fontWeight: 'bold', alignSelf: 'center', marginRight: '0.5rem' }}>絞り込み:</span>
+          <button onClick={() => setNeedZero(!needZero)} style={toggleBtn(needZero)}>0歳児受け入れあり</button>
+          <button onClick={() => setNeedExtended(!needExtended)} style={toggleBtn(needExtended)}>延長保育あり</button>
+        </div>
 
-      <div style={{ marginBottom: '1rem' }}>
-        <input 
-          type="text" 
-          value={searchText}
-          onChange={e => setSearchText(e.target.value)}
-          placeholder="保育園名で検索..."
-          style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #ccc', fontSize: '1rem', boxSizing: 'border-box' }}
-        />
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '0.9rem', fontWeight: 'bold', alignSelf: 'center', marginRight: '0.5rem' }}>並び替え:</span>
+          <select value={sortBy} onChange={e => setSortBy(e.target.value as any)} style={{ padding: '0.4rem', borderRadius: '4px', border: '1px solid #ccc' }}>
+            <option value="default">デフォルト（地域順）</option>
+            <option value="capacity">定員が多い順</option>
+          </select>
+        </div>
       </div>
 
       <div style={{ marginBottom: '1rem', display: 'flex', gap: '0.5rem', overflowX: 'auto' }}>
@@ -162,11 +196,17 @@ export function NurseryList({ settings, onUpdateSettings }: NurseryListProps) {
                     {n.type}
                   </span>
                   <div style={{ margin: '0.25rem 0 0', fontWeight: 700 }}>{n.name}</div>
-                  {n.note && <div style={{ fontSize: '0.8rem', color: '#666' }}>{n.note}</div>}
+                  
+                  {/* リッチデータの表示 */}
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.4rem', fontSize: '0.75rem', color: '#555' }}>
+                    {n.capacity && <span style={{ background: '#f0f0f0', padding: '2px 6px', borderRadius: '4px' }}>定員: {n.capacity}名</span>}
+                    {n.acceptsZero !== undefined && <span style={{ background: n.acceptsZero ? '#e3f2fd' : '#ffebee', padding: '2px 6px', borderRadius: '4px' }}>{n.acceptsZero ? '0歳可' : '0歳不可'}</span>}
+                    {n.extendedCare !== undefined && <span style={{ background: n.extendedCare ? '#e3f2fd' : '#ffebee', padding: '2px 6px', borderRadius: '4px' }}>{n.extendedCare ? '延長有' : '延長無'}</span>}
+                  </div>
                 </div>
                 <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
-                  <a href={n.url || searchUrl(n)} target="_blank" rel="noreferrer" title={n.url ? 'サイトへ' : 'Webで検索'} style={{ fontSize: '1.2rem', textDecoration: 'none' }}>
-                    {n.url ? '🔗' : '🔍'}
+                  <a href={searchUrl(n)} target="_blank" rel="noreferrer" title={n.url ? 'サイトへ' : 'Webで検索'} style={{ fontSize: '1.2rem', textDecoration: 'none' }}>
+                    🔍
                   </a>
                   <a href={mapUrl(n.name)} target="_blank" rel="noreferrer" title="マップで検索" style={{ fontSize: '1.3rem', textDecoration: 'none' }}>
                     📍
@@ -180,20 +220,6 @@ export function NurseryList({ settings, onUpdateSettings }: NurseryListProps) {
                   </button>
                 </div>
               </div>
-              
-              {(fav || memos[n.id]) && (
-                <textarea
-                  value={memos[n.id] || ''}
-                  onChange={(e) => updateMemo(n.id, e.target.value)}
-                  placeholder="見学の感想やメモを夫婦で共有..."
-                  style={{
-                    width: '100%', boxSizing: 'border-box', padding: '0.6rem',
-                    borderRadius: '8px', border: '1px solid #e1e8e5',
-                    background: '#f9fbf9', fontSize: '0.9rem', color: '#333',
-                    resize: 'vertical', minHeight: '60px'
-                  }}
-                />
-              )}
             </div>
           )
         })}
