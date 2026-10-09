@@ -9,8 +9,8 @@ export function Onboarding({ onComplete }: Props) {
 
   const steps = [
     {
-      title: '江戸川市での子育てをスムーズに',
-      desc: '妊娠から小学校入学前までの、江戸川市の制度や手続き、健診などのタスクを自動でリストアップします。',
+      title: '江戸川区での子育てをスムーズに',
+      desc: '妊娠から小学校入学前までの、江戸川区の制度や手続き、健診などのタスクを自動でリストアップします。',
       icon: '👶'
     },
     {
@@ -89,3 +89,4 @@ export function Onboarding({ onComplete }: Props) {
     </div>
   );
 }
+
