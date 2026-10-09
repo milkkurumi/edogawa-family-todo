@@ -258,7 +258,7 @@ export default function App() {
           掲載情報は江戸川区子育て応援サイト「江戸川区公式サイト」等をもとに2026年10月時点で作成しています。手続きの詳細は各タスクの公式情報リンクからご確認ください。
         </p>
         <p>
-          Amazonのアソシエイトとして、かまがや親子カレンダーは適格販売により収入を得ています。「🛒 おすすめ・準備リスト」のリンクは広告（アフィリエイトリンク）です。
+          Amazonのアソシエイトとして、えどがわ親子カレンダーは適格販売により収入を得ています。「🛒 おすすめ・準備リスト」のリンクは広告（アフィリエイトリンク）です。
         </p>
       </footer>
       {toast && <div className="toast">{toast}</div>}
@@ -270,7 +270,7 @@ function Header({ children }: { children?: React.ReactNode }) {
   return (
     <header className="header">
       <div>
-        <h1>かまがや親子カレンダー</h1>
+        <h1>えどがわ親子カレンダー</h1>
         <p className="tagline">何を・いつまでに・誰がやるか</p>
       </div>
       <div className="header-actions">{children}</div>
@@ -329,5 +329,6 @@ function Timeline({ views, settings, onChange }: ListProps) {
     </>
   )
 }
+
 
 
