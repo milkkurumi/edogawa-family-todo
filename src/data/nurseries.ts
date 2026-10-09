@@ -95,3 +95,6 @@ export const searchNurseriesUrl = (nursery: Nursery): string => {
   if (nursery.url) return nursery.url
   return `https://www.google.com/search?q=江戸川区+${encodeURIComponent(nursery.name)}`
 }
+
+export const mapUrl = (name: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + ' 江戸川区')}`
+export const searchUrl = (nursery: Nursery) => `https://www.google.com/search?q=${encodeURIComponent(nursery.name + ' 江戸川区')}`
