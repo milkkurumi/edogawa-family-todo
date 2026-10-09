@@ -48,7 +48,7 @@ export const TASKS: TaskDef[] = [
   {
     id: 'edogawa-nyuji',
     title: '江戸川区独自の「乳児養育手当」を申請する（月額13,000円）',
-    phase: 'born', priority: 'must', role: 'together', anchor: 'birth',
+    phase: 'postpartum', priority: 'must', role: 'together', anchor: 'birth',
     startOffset: 0, endOffset: 30,
     money: '+156,000円（年間）',
     summary: '江戸川区独自の強力な手当。0歳児（1歳になる誕生月まで）を養育している家庭に月額13,000円が支給されます。児童手当とは別に申請が必要なので絶対に忘れないように！',
