@@ -3,7 +3,7 @@ import type { TaskDef } from '../types'
 /**
  * 鎌ケ谷市 妊活〜就学前タスクのマスターデータ
  *
- * 情報源：かまっこ応援団（鎌ケ谷市子育て応援サイト）https://kamakko.info/ ほか
+ * 情報源：江戸川区公式サイト（鎌ケ谷市子育て応援サイト）https://kamakko.info/ ほか
  * 最終確認：2026-10-03
  *
  * 推奨期間は anchor（基準日）からの相対日数で表現する。
@@ -14,22 +14,22 @@ import type { TaskDef } from '../types'
 
 const K = 'https://kamakko.info'
 const SRC = {
-  pregnancy: { sourceUrl: `${K}/ninshin-shussan/ninshingawakattara-2/`, sourceLabel: 'かまっこ応援団「妊娠がわかったら」' },
-  born: { sourceUrl: `${K}/ninshin-shussan/umaretara/`, sourceLabel: 'かまっこ応援団「赤ちゃんが生まれたら」' },
-  birthMoney: { sourceUrl: `${K}/teate-josei/shussan-kanren/`, sourceLabel: 'かまっこ応援団「出産に関連する手当」' },
-  medical: { sourceUrl: `${K}/teate-josei/iryohi/kodomo-iryohi/`, sourceLabel: 'かまっこ応援団「子ども医療費助成」' },
-  allowance: { sourceUrl: `${K}/teate-josei/jido-teate/`, sourceLabel: 'かまっこ応援団「児童手当」' },
-  chipass: { sourceUrl: `${K}/teate-josei/chipas/`, sourceLabel: 'かまっこ応援団「チーパス」' },
-  checkup: { sourceUrl: `${K}/hoken-iryo/kenshin-sodan/`, sourceLabel: 'かまっこ応援団「健診・相談」' },
-  vaccine: { sourceUrl: `${K}/hoken-iryo/yobousesshu/`, sourceLabel: 'かまっこ応援団「予防接種」' },
-  classes: { sourceUrl: `${K}/hoken-iryo/kyoshitsu-koshu/`, sourceLabel: 'かまっこ応援団「教室・講座」' },
-  nursery: { sourceUrl: `${K}/hoiku/hoikuen/nyuen-tetsuzuki-2/`, sourceLabel: 'かまっこ応援団「保育園の入園に関する手続き」' },
-  hoiku: { sourceUrl: `${K}/hoiku/`, sourceLabel: 'かまっこ応援団「保育サービス」' },
-  famisapo: { sourceUrl: `${K}/hoiku/family-support-center/`, sourceLabel: 'かまっこ応援団「ファミリー・サポート・センター」' },
-  kinder: { sourceUrl: `${K}/hoiku/yochien-2/`, sourceLabel: 'かまっこ応援団「幼稚園」' },
-  kinderFree: { sourceUrl: `${K}/teate-josei/shiritsu-yochien-2/`, sourceLabel: 'かまっこ応援団「幼児教育・保育の無償化」' },
-  gakudo: { sourceUrl: `${K}/hoiku/jido-club-2/`, sourceLabel: 'かまっこ応援団「放課後児童クラブ」' },
-  shien: { sourceUrl: `${K}/asobiba/shien-center/`, sourceLabel: 'かまっこ応援団「子育て支援センター」' },
+  pregnancy: { sourceUrl: `${K}/ninshin-shussan/ninshingawakattara-2/`, sourceLabel: '江戸川区公式サイト「妊娠がわかったら」' },
+  born: { sourceUrl: `${K}/ninshin-shussan/umaretara/`, sourceLabel: '江戸川区公式サイト「赤ちゃんが生まれたら」' },
+  birthMoney: { sourceUrl: `${K}/teate-josei/shussan-kanren/`, sourceLabel: '江戸川区公式サイト「出産に関連する手当」' },
+  medical: { sourceUrl: `${K}/teate-josei/iryohi/kodomo-iryohi/`, sourceLabel: '江戸川区公式サイト「子ども医療費助成」' },
+  allowance: { sourceUrl: `${K}/teate-josei/jido-teate/`, sourceLabel: '江戸川区公式サイト「児童手当」' },
+  chipass: { sourceUrl: `${K}/teate-josei/chipas/`, sourceLabel: '江戸川区公式サイト「チーパス」' },
+  checkup: { sourceUrl: `${K}/hoken-iryo/kenshin-sodan/`, sourceLabel: '江戸川区公式サイト「健診・相談」' },
+  vaccine: { sourceUrl: `${K}/hoken-iryo/yobousesshu/`, sourceLabel: '江戸川区公式サイト「予防接種」' },
+  classes: { sourceUrl: `${K}/hoken-iryo/kyoshitsu-koshu/`, sourceLabel: '江戸川区公式サイト「教室・講座」' },
+  nursery: { sourceUrl: `${K}/hoiku/hoikuen/nyuen-tetsuzuki-2/`, sourceLabel: '江戸川区公式サイト「保育園の入園に関する手続き」' },
+  hoiku: { sourceUrl: `${K}/hoiku/`, sourceLabel: '江戸川区公式サイト「保育サービス」' },
+  famisapo: { sourceUrl: `${K}/hoiku/family-support-center/`, sourceLabel: '江戸川区公式サイト「ファミリー・サポート・センター」' },
+  kinder: { sourceUrl: `${K}/hoiku/yochien-2/`, sourceLabel: '江戸川区公式サイト「幼稚園」' },
+  kinderFree: { sourceUrl: `${K}/teate-josei/shiritsu-yochien-2/`, sourceLabel: '江戸川区公式サイト「幼児教育・保育の無償化」' },
+  gakudo: { sourceUrl: `${K}/hoiku/jido-club-2/`, sourceLabel: '江戸川区公式サイト「放課後児童クラブ」' },
+  shien: { sourceUrl: `${K}/asobiba/shien-center/`, sourceLabel: '江戸川区公式サイト「子育て支援センター」' },
   city: { sourceUrl: 'https://www.city.kamagaya.chiba.jp/', sourceLabel: '鎌ケ谷市公式ホームページ' },
   nenkin: { sourceUrl: 'https://www.nenkin.go.jp/', sourceLabel: '日本年金機構' },
   ikukyu: { sourceUrl: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000130583.html', sourceLabel: '厚生労働省「育児・介護休業法について」' },
@@ -45,6 +45,15 @@ const wk = (w: number) => -280 + w * 7
 const mo = (m: number) => Math.round(m * 30.4)
 
 export const TASKS: TaskDef[] = [
+  {
+    id: 'edogawa-nyuji',
+    title: '江戸川区独自の「乳児養育手当」を申請する（月額13,000円）',
+    phase: 'born', priority: 'must', role: 'together', anchor: 'birth',
+    startOffset: 0, endOffset: 30,
+    money: '+156,000円（年間）',
+    summary: '江戸川区独自の強力な手当。0歳児（1歳になる誕生月まで）を養育している家庭に月額13,000円が支給されます。児童手当とは別に申請が必要なので絶対に忘れないように！',
+    bring: ['乳児養育手当認定請求書', '申請者の口座番号がわかるもの']
+  },
   // ───────────── 妊活期 ─────────────
   {
     id: 'prep-fertility-check',
